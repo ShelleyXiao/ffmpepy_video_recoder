@@ -25,6 +25,12 @@ include_directories(${PATH_TO_MEDIACORE}/camera_preview/)
 include_directories(${PATH_TO_MEDIACORE}/livecore/)
 include_directories(${PATH_TO_MEDIACORE}/livecore/common/)
 
+include_directories(${PATH_TO_MEDIACORE}/music_decoder/)
+
+include_directories(${PATH_TO_MEDIACORE}/video_consumer/)
+include_directories(${PATH_TO_MEDIACORE}/video_consumer/libaudio_encoder/)
+include_directories(${PATH_TO_MEDIACORE}/video_consumer/libmusic_merger/)
+include_directories(${PATH_TO_MEDIACORE}/video_consumer/libvideo_consumer/)
 
 file(GLOB FILES_TEST "${PATH_TO_MEDIACORE}/*.cpp")
 file(GLOB FILES_JNI_LAYER "${PATH_TO_JNI_LAYER}/*.cpp")
@@ -39,6 +45,10 @@ file(GLOB FILES_LIB_COMMON_OPENGL_MEDIA_TEXTURE "${PATH_TO_MEDIACORE}/common/ope
 file(GLOB FILES_LIB_COMMON_OPENGL_MEDIA_TEX_COPIER "${PATH_TO_MEDIACORE}/common/opengl_media/texture_copier/*.cpp")
 file(GLOB FILES_LIB_CAMERA_PREVIEW "${PATH_TO_MEDIACORE}/camera_preview/*.cpp")
 file(GLOB FILES_LIB_LIVE_CORE_COMMON "${PATH_TO_MEDIACORE}/livecore/common/*.cpp")
+
+file(GLOB FILES_LIB_MUSIC_DECODER "${PATH_TO_MEDIACORE}/music_decoder/*.cpp")
+
+file(GLOB FILES_LIB_VIDEO_CONSUMER "${PATH_TO_MEDIACORE}/video_consumer/libvideo_consumer/*.cpp")
 
 
 add_library(
@@ -57,7 +67,13 @@ add_library(
              ${FILES_LIB_COMMON_OPENGL_MEDIA_TEXTURE}
              ${FILES_LIB_COMMON_OPENGL_MEDIA_TEX_COPIER}
              ${FILES_LIB_CAMERA_PREVIEW}
-             ${FILES_LIB_LIVE_CORE_COMMON})
+             ${FILES_LIB_LIVE_CORE_COMMON}
+
+             ${FILES_LIB_MUSIC_DECODER}
+
+             ${FILES_LIB_VIDEO_CONSUMER}
+
+             )
 
 
 

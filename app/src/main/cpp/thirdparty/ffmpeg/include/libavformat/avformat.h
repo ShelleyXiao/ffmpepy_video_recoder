@@ -401,7 +401,7 @@ struct AVDeviceCapabilitiesQuery;
  * fields with default values.
  *
  * @param s    associated IO context
- * @param pkt packet
+ * @param audioPacket packet
  * @param size desired payload size
  * @return >0 (read size) if OK, AVERROR_xxx otherwise
  */
@@ -410,14 +410,14 @@ int av_get_packet(AVIOContext *s, AVPacket *pkt, int size);
 
 /**
  * Read data and append it to the current content of the AVPacket.
- * If pkt->size is 0 this is identical to av_get_packet.
+ * If audioPacket->size is 0 this is identical to av_get_packet.
  * Note that this uses av_grow_packet and thus involves a realloc
  * which is inefficient. Thus this function should only be used
  * when there is no reasonable way to know (an upper bound of)
  * the final size.
  *
  * @param s    associated IO context
- * @param pkt packet
+ * @param audioPacket packet
  * @param size amount of data to read
  * @return >0 (read size) if OK, AVERROR_xxx otherwise, previous data
  *         will not be lost even if an error occurs.
@@ -548,7 +548,7 @@ typedef struct AVOutputFormat {
     int (*write_header)(struct AVFormatContext *);
     /**
      * Write a packet. If AVFMT_ALLOW_FLUSH is set in flags,
-     * pkt can be NULL in order to flush data buffered in the muxer.
+     * audioPacket can be NULL in order to flush data buffered in the muxer.
      * When flushing, return 0 if there still is more data to flush,
      * or 1 if everything was flushed and there is no more buffered
      * data.
@@ -685,12 +685,12 @@ typedef struct AVInputFormat {
     int (*read_header)(struct AVFormatContext *);
 
     /**
-     * Read one packet and put it in 'pkt'. pts and flags are also
+     * Read one packet and put it in 'audioPacket'. pts and flags are also
      * set. 'avformat_new_stream' can be called only if the flag
      * AVFMTCTX_NOHEADER is used and only in the calling thread (not in a
      * background thread).
      * @return 0 on success, < 0 on error.
-     *         When returning an error, pkt must not have been allocated
+     *         When returning an error, audioPacket must not have been allocated
      *         or must be freed before returning
      */
     int (*read_packet)(struct AVFormatContext *, AVPacket *pkt);
@@ -2161,7 +2161,7 @@ int av_find_best_stream(AVFormatContext *ic,
  * omit invalid data between valid frames so as to give the decoder the maximum
  * information possible for decoding.
  *
- * If pkt->buf is NULL, then the packet is valid until the next
+ * If audioPacket->buf is NULL, then the packet is valid until the next
  * av_read_frame() or until avformat_close_input(). Otherwise the packet
  * is valid indefinitely. In both cases the packet must be freed with
  * av_free_packet when it is no longer needed. For video, the packet contains
@@ -2169,10 +2169,10 @@ int av_find_best_stream(AVFormatContext *ic,
  * frame has a known fixed size (e.g. PCM or ADPCM data). If the audio frames
  * have a variable size (e.g. MPEG audio), then it contains one frame.
  *
- * pkt->pts, pkt->dts and pkt->duration are always set to correct
+ * audioPacket->pts, audioPacket->dts and audioPacket->duration are always set to correct
  * values in AVStream.time_base units (and guessed if the format cannot
- * provide them). pkt->pts can be AV_NOPTS_VALUE if the video format
- * has B-frames, so it is better to rely on pkt->dts if you do not
+ * provide them). audioPacket->pts can be AV_NOPTS_VALUE if the video format
+ * has B-frames, so it is better to rely on audioPacket->dts if you do not
  * decompress the payload.
  *
  * @return 0 if OK, < 0 on error or end of file
@@ -2301,7 +2301,7 @@ int avformat_write_header(AVFormatContext *s, AVDictionary **options);
  * function.
  *
  * @param s media file handle
- * @param pkt The packet containing the data to be written. Note that unlike
+ * @param audioPacket The packet containing the data to be written. Note that unlike
  *            av_interleaved_write_frame(), this function does not take
  *            ownership of the packet passed to it (though some muxers may make
  *            an internal reference to the input packet).
@@ -2332,7 +2332,7 @@ int av_write_frame(AVFormatContext *s, AVPacket *pkt);
  * av_write_frame() instead of this function.
  *
  * @param s media file handle
- * @param pkt The packet containing the data to be written.
+ * @param audioPacket The packet containing the data to be written.
  *            <br>
  *            If the packet is reference-counted, this function will take
  *            ownership of this reference and unreference it later when it sees
@@ -2492,7 +2492,7 @@ void av_hex_dump_log(void *avcl, int level, const uint8_t *buf, int size);
  * Send a nice dump of a packet to the specified file stream.
  *
  * @param f The file stream pointer where the dump should be sent to.
- * @param pkt packet to dump
+ * @param audioPacket packet to dump
  * @param dump_payload True if the payload must be displayed, too.
  * @param st AVStream that the packet belongs to
  */
@@ -2506,7 +2506,7 @@ void av_pkt_dump2(FILE *f, const AVPacket *pkt, int dump_payload, const AVStream
  * pointer to an AVClass struct.
  * @param level The importance level of the message, lower values signifying
  * higher importance.
- * @param pkt packet to dump
+ * @param audioPacket packet to dump
  * @param dump_payload True if the payload must be displayed, too.
  * @param st AVStream that the packet belongs to
  */

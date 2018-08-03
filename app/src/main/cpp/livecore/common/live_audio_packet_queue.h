@@ -24,25 +24,25 @@ typedef struct LiveAudioPacket {
     }
 
     ~LiveAudioPacket() {
-        if(NULL != buffer) {
+        if (NULL != buffer) {
             //对于基本数据类型，这里delete delete[] 效果一样
             delete[] buffer;
             buffer = NULL;
         }
-        if(NULL != data) {
+        if (NULL != data) {
             delete data;
             data = NULL;
         }
     }
 
-}LiveAudioPacket;
+} LiveAudioPacket;
 
 typedef struct LiveAudioPacketList {
-    LiveAudioPacket *pkt;
+    LiveAudioPacket *audioPacket;
     LiveAudioPacketList *next;
 
     LiveAudioPacketList() {
-        pkt = NULL;
+        audioPacket = NULL;
         next = NULL;
     }
 
@@ -51,7 +51,7 @@ typedef struct LiveAudioPacketList {
 
 inline void buildPacketFromBuffer(LiveAudioPacket *audioPacket, short *buffer, int sampleSize) {
     short *packetBuffer = new short[sampleSize];
-    if(NULL != packetBuffer) {
+    if (NULL != packetBuffer) {
         memcpy(packetBuffer, buffer, sampleSize * 2);
         audioPacket->buffer = packetBuffer;
         audioPacket->size = sampleSize;
@@ -61,7 +61,31 @@ inline void buildPacketFromBuffer(LiveAudioPacket *audioPacket, short *buffer, i
 }
 
 class LiveAudioPacketQueue {
+public:
+    LiveAudioPacketQueue();
+    LiveAudioPacketQueue(const char *name);
 
+    ~LiveAudioPacketQueue();
+
+    void init();
+    void flush();
+
+    int put(LiveAudioPacket *audioPacket);
+
+    int get(LiveAudioPacket **audioPacket, bool block);
+
+    int size();
+
+    void abort();
+
+private:
+    LiveAudioPacketList *mFirst;
+    LiveAudioPacketList *mLast;
+    int mNbPackets;
+    bool mAbortRequest;
+    pthread_mutex_t mLock;
+    pthread_cond_t mCondition;
+    const char *queueName;
 };
 
 #endif //ANDROIDFFMPEGRECODER_LIVE_AUDIO_PACKET_QUEUE_H

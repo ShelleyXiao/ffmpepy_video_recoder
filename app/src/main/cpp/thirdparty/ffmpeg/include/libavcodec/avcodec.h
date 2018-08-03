@@ -4035,7 +4035,7 @@ void av_destruct_packet(AVPacket *pkt);
  * Note, this does not touch the data and size members, which have to be
  * initialized separately.
  *
- * @param pkt packet
+ * @param audioPacket packet
  */
 void av_init_packet(AVPacket *pkt);
 
@@ -4043,7 +4043,7 @@ void av_init_packet(AVPacket *pkt);
  * Allocate the payload of a packet and initialize its fields with
  * default values.
  *
- * @param pkt packet
+ * @param audioPacket packet
  * @param size wanted payload size
  * @return 0 if OK, AVERROR_xxx otherwise
  */
@@ -4052,7 +4052,7 @@ int av_new_packet(AVPacket *pkt, int size);
 /**
  * Reduce packet size, correctly zeroing padding
  *
- * @param pkt packet
+ * @param audioPacket packet
  * @param size new size
  */
 void av_shrink_packet(AVPacket *pkt, int size);
@@ -4060,7 +4060,7 @@ void av_shrink_packet(AVPacket *pkt, int size);
 /**
  * Increase packet size, correctly zeroing padding
  *
- * @param pkt packet
+ * @param audioPacket packet
  * @param grow_by number of bytes by which to increase the size of the packet
  */
 int av_grow_packet(AVPacket *pkt, int grow_by);
@@ -4068,7 +4068,7 @@ int av_grow_packet(AVPacket *pkt, int grow_by);
 /**
  * Initialize a reference-counted packet from av_malloc()ed data.
  *
- * @param pkt packet to be initialized. This function will set the data, size,
+ * @param audioPacket packet to be initialized. This function will set the data, size,
  *        buf and destruct fields, all others are left untouched.
  * @param data Data allocated by av_malloc() to be used as packet data. If this
  *        function returns successfully, the data is owned by the underlying AVBuffer.
@@ -4103,14 +4103,14 @@ int av_copy_packet_side_data(AVPacket *dst, const AVPacket *src);
 /**
  * Free a packet.
  *
- * @param pkt packet to free
+ * @param audioPacket packet to free
  */
 void av_free_packet(AVPacket *pkt);
 
 /**
  * Allocate new information of a packet.
  *
- * @param pkt packet
+ * @param audioPacket packet
  * @param type side information type
  * @param size side information size
  * @return pointer to fresh allocated data or NULL otherwise
@@ -4121,7 +4121,7 @@ uint8_t* av_packet_new_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
 /**
  * Shrink the already allocated side data buffer
  *
- * @param pkt packet
+ * @param audioPacket packet
  * @param type side information type
  * @param size new side information size
  * @return 0 on success, < 0 on failure
@@ -4132,7 +4132,7 @@ int av_packet_shrink_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
 /**
  * Get side information from packet.
  *
- * @param pkt packet
+ * @param audioPacket packet
  * @param type desired side information type
  * @param size pointer for side information size to store (optional)
  * @return pointer to data if present or NULL otherwise
@@ -4169,7 +4169,7 @@ int av_packet_unpack_dictionary(const uint8_t *data, int size, AVDictionary **di
  * Convenience function to free all the side data stored.
  * All the other fields stay untouched.
  *
- * @param pkt packet
+ * @param audioPacket packet
  */
 void av_packet_free_side_data(AVPacket *pkt);
 
@@ -4197,7 +4197,7 @@ int av_packet_ref(AVPacket *dst, const AVPacket *src);
  * Unreference the buffer referenced by the packet and reset the
  * remaining packet fields to their default values.
  *
- * @param pkt The packet to be unreferenced.
+ * @param audioPacket The packet to be unreferenced.
  */
 void av_packet_unref(AVPacket *pkt);
 
@@ -4230,8 +4230,8 @@ int av_packet_copy_props(AVPacket *dst, const AVPacket *src);
  * timebase to another. Timestamps with unknown values (AV_NOPTS_VALUE) will be
  * ignored.
  *
- * @param pkt packet on which the conversion will be performed
- * @param tb_src source timebase, in which the timing fields in pkt are
+ * @param audioPacket packet on which the conversion will be performed
+ * @param tb_src source timebase, in which the timing fields in audioPacket are
  *               expressed
  * @param tb_dst destination timebase, to which the timing fields will be
  *               converted
