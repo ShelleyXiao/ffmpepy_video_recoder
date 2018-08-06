@@ -5,13 +5,10 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-
 set(PATH_TO_MEDIACORE ${CMAKE_SOURCE_DIR}/src/main/cpp)
-SET(PATH_TO_JNI_LAYER  ${CMAKE_SOURCE_DIR}/src/main/jni)
+set(PATH_TO_JNI_LAYER ${CMAKE_SOURCE_DIR}/src/main/jni)
 set(PATH_TO_THIRDPARTY ${PATH_TO_MEDIACORE}/thirdparty)
-set(PATH_TO_PRE_BUILT  ${PATH_TO_THIRDPARTY}/prebuilt/${ANDROID_ABI})
-
-message("path: ${PATH_TO_MEDIA_CORE}")
+set(PATH_TO_PRE_BUILT ${PATH_TO_THIRDPARTY}/prebuilt/${ANDROID_ABI})
 
 add_definitions("
 -DGL_GLEXT_PROTOTYPES
@@ -24,18 +21,19 @@ include_directories(${PATH_TO_MEDIACORE}/common/)
 include_directories(${PATH_TO_MEDIACORE}/camera_preview/)
 include_directories(${PATH_TO_MEDIACORE}/livecore/)
 include_directories(${PATH_TO_MEDIACORE}/livecore/common/)
-include_directories(${PATH_TO_MEDIACORE}/livecore/platform_dependent/)
 include_directories(${PATH_TO_MEDIACORE}/livecore/audio_encoder/)
-
+include_directories(${PATH_TO_MEDIACORE}/livecore/consumer/)
+include_directories(${PATH_TO_MEDIACORE}/livecore/platform_dependent/)
+include_directories(${PATH_TO_MEDIACORE}/livecore/publisher/)
 include_directories(${PATH_TO_MEDIACORE}/music_decoder/)
-
 include_directories(${PATH_TO_MEDIACORE}/recorder_processor/)
-
 include_directories(${PATH_TO_MEDIACORE}/video_consumer/)
 include_directories(${PATH_TO_MEDIACORE}/video_consumer/libaudio_encoder/)
 include_directories(${PATH_TO_MEDIACORE}/video_consumer/libmusic_merger/)
 include_directories(${PATH_TO_MEDIACORE}/video_consumer/libvideo_consumer/)
-include_directories(${PATH_TO_MEDIACORE}/video_consumer/libmusic_merger/)
+include_directories(${PATH_TO_MEDIACORE}/video_encoder/)
+include_directories(${PATH_TO_MEDIACORE}/video_encoder/soft_encoder/)
+include_directories(${PATH_TO_MEDIACORE}/video_encoder/hw_encoder/)
 
 file(GLOB FILES_TEST "${PATH_TO_MEDIACORE}/*.cpp")
 file(GLOB FILES_JNI_LAYER "${PATH_TO_JNI_LAYER}/*.cpp")
@@ -50,53 +48,54 @@ file(GLOB FILES_LIB_COMMON_OPENGL_MEDIA_TEXTURE "${PATH_TO_MEDIACORE}/common/ope
 file(GLOB FILES_LIB_COMMON_OPENGL_MEDIA_TEX_COPIER "${PATH_TO_MEDIACORE}/common/opengl_media/texture_copier/*.cpp")
 file(GLOB FILES_LIB_CAMERA_PREVIEW "${PATH_TO_MEDIACORE}/camera_preview/*.cpp")
 file(GLOB FILES_LIB_LIVE_CORE_COMMON "${PATH_TO_MEDIACORE}/livecore/common/*.cpp")
-file(GLOB FILES_LIB_LIVE_CORE_COMMON_PLATFORM_DEPENDENT "${PATH_TO_MEDIACORE}/livecore/platform_dependent/*.cpp")
-file(GLOB FILES_LIB_LIVE_CORE_COMMON_AUDIO_ENCODER "${PATH_TO_MEDIACORE}/livecore/audio_encoder/*.cpp")
-
+file(GLOB FILES_LIB_LIVE_CORE_AUDIOENCODER "${PATH_TO_MEDIACORE}/livecore/audio_encoder/*.cpp")
+file(GLOB FILES_LIB_LIVE_CORE_CONSUMER "${PATH_TO_MEDIACORE}/livecore/consumer/*.cpp")
+file(GLOB FILES_LIB_LIVE_CORE_PUBLISHER "${PATH_TO_MEDIACORE}/livecore/publisher/*.cpp")
 file(GLOB FILES_LIB_MUSIC_DECODER "${PATH_TO_MEDIACORE}/music_decoder/*.cpp")
-
-file(GLOB FILES_LIB_VIDEO_CONSUMER "${PATH_TO_MEDIACORE}/video_consumer/libvideo_consumer/*.cpp")
-file(GLOB FILES_LIB_VIDEO_CONSUMER_MUSIC_MERGER "${PATH_TO_MEDIACORE}/video_consumer/libmusic_merger/*.cpp")
-
 file(GLOB FILES_LIB_RECORDER_PROCESSOR "${PATH_TO_MEDIACORE}/recorder_processor/*.cpp")
+file(GLOB FILES_LIB_VIDEO_CONSUMER_A_ENCODER "${PATH_TO_MEDIACORE}/video_consumer/libaudio_encoder/*.cpp")
+file(GLOB FILES_LIB_VIDEO_CONSUMER_MUSIC_MERGER "${PATH_TO_MEDIACORE}/video_consumer/libmusic_merger/*.cpp")
+file(GLOB FILES_LIB_VIDEO_CONSUMER "${PATH_TO_MEDIACORE}/video_consumer/libvideo_consumer/*.cpp")
+file(GLOB FILES_LIB_VIDEO_ENCODER "${PATH_TO_MEDIACORE}/video_encoder/*.cpp")
+file(GLOB FILES_LIB_VIDEO_ENCODER_HW "${PATH_TO_MEDIACORE}/video_encoder/hw_encoder/*.cpp")
+file(GLOB FILES_LIB_VIDEO_ENCODER_X264 "${PATH_TO_MEDIACORE}/video_encoder/soft_encoder/*.cpp")
+file(GLOB FILES_LIB_VIDEO_ENCODER_SOFT_COLOR "${PATH_TO_MEDIACORE}/video_encoder/soft_encoder/color_conversion/color_conversion_armv7a.cpp")
 
-add_library(
-             native-lib
+add_library(native-lib SHARED
+        ${FILES_TEST}
+        ${FILES_JNI_LAYER}
+        ${FILES_LIB_COMMON}
+        ${FILES_LIB_COMMON_EGL_CORE}
+        ${FILES_LIB_COMMON_MSG_Q}
+        ${FILES_LIB_COMMON_RESAMPLER}
+        ${FILES_LIB_COMMON_OPENGL_MEDIA}
+        ${FILES_LIB_COMMON_OPENGL_MEDIA_RENDER}
+        ${FILES_LIB_COMMON_OPENGL_MEDIA_TEXTURE}
+        ${FILES_LIB_COMMON_OPENGL_MEDIA_TEX_COPIER}
+        ${FILES_LIB_CAMERA_PREVIEW}
+        ${FILES_LIB_LIVE_CORE_COMMON}
+        ${FILES_LIB_LIVE_CORE_AUDIOENCODER}
+        ${FILES_LIB_LIVE_CORE_CONSUMER}
+        ${FILES_LIB_LIVE_CORE_PUBLISHER}
+        ${FILES_LIB_MUSIC_DECODER}
+        ${FILES_LIB_RECORDER_PROCESSOR}
+        ${FILES_LIB_VIDEO_CONSUMER_A_ENCODER}
+        ${FILES_LIB_VIDEO_CONSUMER_MUSIC_MERGER}
+        ${FILES_LIB_VIDEO_CONSUMER}
+        ${FILES_LIB_VIDEO_ENCODER}
+        ${FILES_LIB_VIDEO_ENCODER_HW}
+        ${FILES_LIB_VIDEO_ENCODER_X264}
+        ${FILES_LIB_VIDEO_ENCODER_SOFT_COLOR}
+        )
 
-             SHARED
-
-             ${FILES_TEST}
-             ${FILES_JNI_LAYER}
-             ${FILES_LIB_COMMON}
-             ${FILES_LIB_COMMON_EGL_CORE}
-             ${FILES_LIB_COMMON_MSG_Q}
-             ${FILES_LIB_COMMON_RESAMPLER}
-             ${FILES_LIB_COMMON_OPENGL_MEDIA}
-             ${FILES_LIB_COMMON_OPENGL_MEDIA_RENDER}
-             ${FILES_LIB_COMMON_OPENGL_MEDIA_TEXTURE}
-             ${FILES_LIB_COMMON_OPENGL_MEDIA_TEX_COPIER}
-             ${FILES_LIB_CAMERA_PREVIEW}
-             ${FILES_LIB_LIVE_CORE_COMMON}
-             ${FILES_LIB_LIVE_CORE_COMMON_PLATFORM_DEPENDENT}
-             ${FILES_LIB_LIVE_CORE_COMMON_AUDIO_ENCODER}
-             ${FILES_LIB_MUSIC_DECODER}
-
-             ${FILES_LIB_VIDEO_CONSUMER}
-             ${FILES_LIB_VIDEO_CONSUMER_MUSIC_MERGER}
-
-             )
-
-
-
-target_link_libraries( # Specifies the target library.
-                       native-lib
+target_link_libraries(native-lib
+                       # 引入系统的动态库
                        log
                        android
                        GLESv2
                        EGL
                        z
                        OpenSLES
-
                        # 引入ffmpeg相关静态库
                        ${PATH_TO_PRE_BUILT}/libavfilter.a
                        ${PATH_TO_PRE_BUILT}/libavformat.a
@@ -109,4 +108,5 @@ target_link_libraries( # Specifies the target library.
                        ${PATH_TO_PRE_BUILT}/libfdk-aac.a
                        ${PATH_TO_PRE_BUILT}/libvo-aacenc.a
                        ${PATH_TO_PRE_BUILT}/libx264.a
-                       ${PATH_TO_PRE_BUILT}/libsox.a )
+                       ${PATH_TO_PRE_BUILT}/libsox.a
+                       )
